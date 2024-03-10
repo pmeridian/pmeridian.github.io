@@ -1,0 +1,457 @@
+<html>
+
+<head>
+  <style>
+    #PerceptronCanvas {
+      border: 3px solid black;
+    }
+
+    #PerceptronBlueClassButton {
+      color: blue;
+    }
+
+    #PerceptronRedClassButton {
+      color: red;
+    }
+
+    .PerceptronControlButton {
+      font-weight: bold;
+      margin-right: 20px;
+      width: 110px;
+    }
+
+    .PerceptronActiveClassButton {
+      background-color: yellow;;
+    }
+
+    .PerceptronTrainButton {
+      color: green;
+    }
+
+    .PerceptronClassifyButton {
+      color: #0088AA;
+    }
+
+    .PerceptronBlueClassColor {
+      color: blue;
+    }
+
+    .PerceptronRedClassColor {
+      color: red;
+    }
+
+    .PerceptronInputAreaError {
+      color: red;
+      font-style: italic;
+    }
+  </style>
+
+  <script type="text/javascript">
+    const DATA_POINT_RENDER_RADIUS = 4;
+    const RED_CLASS_VALUE = 0;
+    const BLUE_CLASS_VALUE = 1;
+
+    class PerceptronDataPoint {
+      constructor(xCoordinate, yCoordinate, dataClass, predictedClass = null) {
+        this._xCoordinate = xCoordinate;
+        this._yCoordinate = yCoordinate;
+        this._dataClass = dataClass;
+        this._predictedClass = predictedClass;
+      }
+      getDataClass() {
+        return this._dataClass;
+      }
+      getXCoordinate() {
+        return this._xCoordinate;
+      }
+      getYCoordinate() {
+        return this._yCoordinate;
+      }
+      setPredictedClass(predictedClass) {
+        this._predictedClass = predictedClass;
+      }
+      getPredictedClass() {
+        return this._predictedClass;
+      }
+      // Returns the coordinates such that they are normalized between -1 and 1
+      // relative to their pixel position on the 2D canvas.
+      getNormalizedDataPoint() {
+        const canvas = getCanvasObject();
+        if (canvas == null) {
+          return this;
+        }
+        const scaledX = (2 * this._xCoordinate - canvas.width) / canvas.width;
+        const scaledY = -1 * ((2 * this._yCoordinate - canvas.height) / canvas.height);
+        return new PerceptronDataPoint(scaledX, scaledY, this._dataClass, this._predictedClass);
+      }
+    }
+
+    // Perceptron object keeps track of its weights and provides output when given input.
+    class Perceptron {
+      constructor(learningRate = 1) {
+        this._bias = 0;
+        this._wX = 1;
+        this._wY = 1;
+        this._learningRate = learningRate;
+      }
+      classify(dataPoint) {
+        const normalizedDataPoint = dataPoint.getNormalizedDataPoint();
+        const sum =
+          this._bias +
+          (this._wX * normalizedDataPoint.getXCoordinate()) +
+          (this._wY * normalizedDataPoint.getYCoordinate());
+        //const predictedValue = 1 / (1 + Math.exp(-1 * sum)); // sigmoid
+	const predictedValue = sum >= 0 ? 1 : 0;
+        const predictedClass = predictedValue >= 0.5 ? 1 : 0;
+        return { predictedValue, predictedClass };
+      }
+      train(dataPoint, predictedValue) {
+        const normalizedDataPoint = dataPoint.getNormalizedDataPoint();
+        const expectedValue = normalizedDataPoint.getDataClass();
+        const difference = expectedValue - predictedValue;
+        this._bias += this._learningRate * difference;
+        this._wX += this._learningRate * difference * normalizedDataPoint.getXCoordinate();
+        this._wY += this._learningRate * difference * normalizedDataPoint.getYCoordinate();
+      }
+      getHyperplaneYCoordinateAt(canvasXCoordinate) {
+        const canvas = getCanvasObject();
+        if (canvas == null) {
+          return 0;
+        }
+        const scaledX = (2 * canvasXCoordinate - canvas.width) / canvas.width;
+        const scaledY = (-1 * this._wX * scaledX - this._bias) / this._wY
+        const canvasYCoordinate = (-1 * scaledY * canvas.height + canvas.height) / 2;
+        return canvasYCoordinate;
+      }
+      reset() {
+        this._bias = 0;
+        this._wX = 1;
+        this._wY = 1;
+      }
+      getLearningRate() {
+        return this._learningRate;
+      }
+      setLearningRate(learningRate) {
+        this._learningRate = learningRate;
+      }
+    }
+
+    let dataPoints = [];
+    let currentlySelectedTrainingClass = BLUE_CLASS_VALUE;
+    const perceptron = new Perceptron();
+
+    function onPageLoadSetup() {
+      document.getElementById('PerceptronLearningRateInput').value = perceptron.getLearningRate().toString();
+      redrawCanvas();
+    }
+
+    function getCanvasObject() {
+      return document.getElementById('PerceptronCanvas');
+    }
+
+    function redrawCanvas() {
+      const canvas = getCanvasObject();
+      if (canvas == null) {
+        return;
+      }
+      const context = canvas.getContext('2d');
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      // Draw the graph quadrants:
+      context.strokeStyle = 'black';
+      context.beginPath();
+      context.moveTo(0, canvas.height / 2);
+      context.lineTo(canvas.width, canvas.height / 2);
+      context.stroke();
+      context.beginPath();
+      context.moveTo(canvas.width / 2, 0);
+      context.lineTo(canvas.width / 2, canvas.height);
+      context.stroke();
+      // Draw the classification line if possible:
+      context.strokeStyle = "orange";
+      context.beginPath();
+      context.moveTo(0, perceptron.getHyperplaneYCoordinateAt(0));
+      context.lineTo(canvas.width, perceptron.getHyperplaneYCoordinateAt(canvas.width));
+      context.stroke();
+      // Draw the data points:
+      dataPoints.forEach(dataPoint => {
+        context.fillStyle = dataPoint.getDataClass() === BLUE_CLASS_VALUE ? 'blue' : 'red';
+        context.beginPath();
+        context.arc(
+          dataPoint.getXCoordinate(),
+          dataPoint.getYCoordinate(),
+          DATA_POINT_RENDER_RADIUS,
+          0, // start arc angle
+          2 * Math.PI, // end arc angle
+        );
+        context.fill();
+        const predictedClass = dataPoint.getPredictedClass();
+        if (predictedClass != null) {
+          context.strokeStyle = predictedClass === BLUE_CLASS_VALUE ? 'blue' : 'red';
+          context.beginPath();
+          context.arc(
+            dataPoint.getXCoordinate(),
+            dataPoint.getYCoordinate(),
+            DATA_POINT_RENDER_RADIUS * 2,
+            0,
+            2 * Math.PI,
+          );
+          context.stroke();
+        }
+      });
+    }
+
+    function onCanvasClicked(event) {
+      const canvas = getCanvasObject();
+      if (canvas == null) {
+        return;
+      }
+      const dataPoint = new PerceptronDataPoint(
+        event.offsetX,
+        event.offsetY,
+        currentlySelectedTrainingClass,
+      );
+      const { predictedValue, predictedClass } = perceptron.classify(dataPoint);
+      const predictionDisplay = document.getElementById('PerceptronOutputDisplay');
+      const classIndicator =
+        ' (<span class="' +
+        (predictedClass === BLUE_CLASS_VALUE ? 'PerceptronBlueClassColor' : 'PerceptronRedClassColor') +
+        '">' +
+        (predictedClass === BLUE_CLASS_VALUE ? 'Blue' : 'Red') +
+        '</span>)';
+      predictionDisplay.innerHTML = (Math.round(predictedValue * 1000) / 1000) + classIndicator;
+      dataPoint.setPredictedClass(predictedClass);
+//      const predictionLoss = document.getElementById('PerceptronOutputLoss');
+//      predictionLoss.innerHTML = (Math.round(predictedValue * 1000) / 1000);
+      dataPoint.setPredictedClass(predictedClass);
+      const liveTrainingCheckbox = document.getElementById('PerceptronLiveTrainingCheckbox');
+      if (liveTrainingCheckbox.checked) {
+        perceptron.train(dataPoint, predictedValue);
+      }
+      dataPoints.push(dataPoint);
+      redrawCanvas();
+    }
+
+    function onControlButtonClicked(buttonName) {
+      switch(buttonName) {
+        case 'Blue':
+          onBlueClassSelected();
+          break;
+        case 'Red':
+          onRedClassSelected();
+          break;
+        case 'Reset':
+          onResetButtonClicked();
+          break;
+        case 'Train':
+          trainPerceptronOnAllDataPoints();
+          break;
+        case 'Retrain':
+          onRetrainButtonClicked();
+          break;
+        case 'Classify':
+          onClassifyButtonClicked();
+          break;
+        default:
+          break;
+      }
+    }
+
+    function onBlueClassSelected() {
+      currentlySelectedTrainingClass = BLUE_CLASS_VALUE;
+      document.getElementById('PerceptronBlueClassButton').classList.add('PerceptronActiveClassButton');
+      document.getElementById('PerceptronRedClassButton').classList.remove('PerceptronActiveClassButton');
+    }
+
+    function onRedClassSelected() {
+      currentlySelectedTrainingClass = RED_CLASS_VALUE;
+      document.getElementById('PerceptronRedClassButton').classList.add('PerceptronActiveClassButton');
+      document.getElementById('PerceptronBlueClassButton').classList.remove('PerceptronActiveClassButton');
+    }
+
+    function onResetButtonClicked() {
+      dataPoints = [];
+      perceptron.reset();
+      redrawCanvas();
+    }
+
+    function trainPerceptronOnAllDataPoints() {
+      dataPoints.forEach(dataPoint => {
+        const { predictedValue, _predictedClass } = perceptron.classify(dataPoint);
+        perceptron.train(dataPoint, predictedValue);
+      });
+      redrawCanvas();
+    }
+
+    function onRetrainButtonClicked() {
+      perceptron.reset();
+      trainPerceptronOnAllDataPoints();
+    }
+
+    function onClassifyButtonClicked() {
+      dataPoints.forEach(dataPoint => {
+        const { _predictedValue, predictedClass } = perceptron.classify(dataPoint);
+        dataPoint.setPredictedClass(predictedClass);
+      });
+      redrawCanvas();
+    }
+
+    function onLearningRateChanged() {
+      const learningRateInput = document.getElementById('PerceptronLearningRateInput');
+      const decimalNumberRegex = /^\d+(\.\d{1,2})?$/;
+      if (decimalNumberRegex.test(learningRateInput.value)) {
+        perceptron.setLearningRate(parseFloat(learningRateInput.value));
+        document.getElementById('PerceptronLearningRateSection').classList.remove('PerceptronInputAreaError');
+      } else {
+        document.getElementById('PerceptronLearningRateSection').classList.add('PerceptronInputAreaError');
+      }
+    }
+  </script>
+</head>
+
+<body onload="onPageLoadSetup()">
+  <h1>Simple Perceptron Demo</h1>
+  <h2>Introduction</h2>
+  <p>
+    A <a href="https://en.wikipedia.org/wiki/Perceptron" target="blank">perceptron</a>
+    is very simple linear classification algorithm that can decide between two classes.
+    This demo, written entirely in JavaScript, provides a visual example to how the perceptron
+    works by classifying dots as either blue or red.
+  </p>
+  <h2>Instructions</h2>
+  <ol>
+    <li>
+      The <b>canvas</b> is the big rectangle with the four quadrants below. When you click on it,
+      a <span class="PerceptronBlueClassColor">blue</span> or
+      <span class="PerceptronRedClassColor">red</span> dot will appear, depending on which of the
+      <b class="PerceptronBlueClassColor">Blue</b> or <b class="PerceptronRedClassColor">Red</b>
+      buttons below the <b>canvas</b> are selected. The currently-selected class is
+      <span class="PerceptronActiveClassButton">highlighted</span>, and can be switched at any time.
+    </li>
+    <li>
+      Each dot you add on the <b>canvas</b> also has a <span class="PerceptronBlueClassColor">blue</span>
+      or <span class="PerceptronRedClassColor">red</span> circle around it. This indicates the predicted
+      class by the perceptron. As the perceptron learns, it will get better at predicting. You can also
+      see the exact value the perceptron calculated for the new point below the <b>Learning Rate</b> box.
+      Anything over 0.5 is classified as <span class="PerceptronBlueClassColor">blue</span> and anything
+      under 0.5 is classified as <span class="PerceptronRedClassColor">red</span>.
+    </li>
+    <li>
+      The line is the perceptron's linear classification cutoff. Initially, any point to the top right
+      of the line will classified as <span class="PerceptronBlueClassColor">blue</span> and any point
+      to the bottom left will be classified as <span class="PerceptronRedClassColor">red</span>,
+      but as the perceptron learns, the line will move in the best possible way to divide the classes.
+    </li>
+    <li>
+      The <b>Reset</b> button removes all points and resets the perceptron.
+    </li>
+    <li>
+      Once you have several points on the <b>canvas</b>, click the
+      <b class="PerceptronTrainButton">Train</b> button to start teaching the perceptron and watch
+      the line move to divide the <span class="PerceptronBlueClassColor">blue</span> and
+      <span class="PerceptronRedClassColor">red</span> dots as best as it can. Keep clicking to
+      run more iterations if it doesn't look good yet!
+      <i>REMEMBER:</i> the perceptron is a linear classifier, so it can never correctly classify
+      points if they can't be divided by a straight line.
+    </li>
+    <li>
+      The <b class="PerceptronTrainButton">Retrain</b> simply resets the perceptron and runs a single
+      training iteration on it from scratch. This is useful to see the learning process again on
+      the same data set (points on the <b>canvas</b>).
+    </li>
+    <li>
+      Finally, click the <b class="PerceptronClassifyButton">Classify</b> button to re-classify all
+      points on the <b>canvas</b> (shown by the circles around the dots).
+    </li>
+    <li>
+      The <b>Learning Rate</b> input is used to adjust the learning rate of the perceptron. It should
+      be a non-negative number. A higher learning rate may get you a good result in fewer training
+      iterations, but it can also be less stable on more complex data sets. Try it out - set a new value
+      and retrain the perceptron!
+    </li>
+    <li>
+      You can select the <b>Live Training</b> checkbox to see the perceptron get trained on each
+      new input in real time. If selected, the perceptron will adjust itself slightly based on every
+      new point added to the <b>canvas</b> right away. You can still
+      <b class="PerceptronTrainButton">Train</b> or <b class="PerceptronTrainButton">Retrain</b> it
+      later.
+    </li>
+  </ol>
+  <h2>Demo</h2>
+  <p>
+    <canvas
+      id="PerceptronCanvas"
+      width="860"
+      height="540"
+      onload="onCanvasLoad()"
+      onmousedown="onCanvasClicked(event)">
+      Your browser does not support the canvas element.
+    </canvas>
+  </p>
+  <p>
+    <button
+      class="PerceptronControlButton PerceptronActiveClassButton"
+      id="PerceptronBlueClassButton"
+      onclick="onControlButtonClicked('Blue')">
+      Blue
+    </button>
+    <button
+      class="PerceptronControlButton"
+      id="PerceptronRedClassButton"
+      onclick="onControlButtonClicked('Red')">
+      Red
+    </button>
+    <button
+      class="PerceptronControlButton"
+      onclick="onControlButtonClicked('Reset')">
+      Reset
+    </button>
+  </p>
+  <p>
+    <button
+      class="PerceptronControlButton PerceptronTrainButton"
+      onclick="onControlButtonClicked('Train')">
+      Train
+    </button>
+    <button
+      class="PerceptronControlButton PerceptronTrainButton"
+      onclick="onControlButtonClicked('Retrain')">
+      Retrain
+    </button>
+    <button
+      class="PerceptronControlButton PerceptronClassifyButton"
+      onclick="onControlButtonClicked('Classify')">
+      Classify
+    </button>
+  </p>
+  <p id="PerceptronLearningRateSection">
+    Learning Rate:
+    <input
+      id="PerceptronLearningRateInput"
+      type="text"
+      onchange="onLearningRateChanged()"/>
+  </p>
+  <p>
+    Perceptron output value for last point added:
+    <span id="PerceptronOutputDisplay">?</span>
+  </p>
+  <p>
+    Live Training: run a training iteraction every time a new point is added?
+    <input id="PerceptronLiveTrainingCheckbox" type="checkbox"/>
+  </p>
+  <p>
+    <b>Hint:</b> Bad results? Try clicking the "Train" button several times!
+  </p>
+  <p>
+    Licence - MIT <br>
+
+    Copyright 2023 Paolo Meridiani; <br>
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: <br>
+
+    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. <br>
+
+    Based on <a href="https://github.com/rteammco/perceptron/">https://github.com/rteammco/perceptron/</a>
+    </p>
+</body>
+
+</html>
