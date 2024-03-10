@@ -13,7 +13,7 @@ $(document).ready(function () {
 	})
 	$("#run-button").click(function() {
 		clear_divs();
-		$("#chart-div").append('<h3 id="chart-title">Average Scores per Bot</h3>');
+		$("#chart-div").append('<h3 id="chart-title">Average Scores per Agent</h3>');
 		$("#chart-div").append('<canvas id="barchart"></canvas>');
 		players = create_bots(players_names);
 		opponents = create_bots(players_names);

@@ -1,7 +1,7 @@
 var R = 3;
-var T = 5;
-var S = 0;
-var P = 1;
+var T = 4;
+var S = 1;
+var P = 2;
 
 var scores = {
 	'CC' : [R, R],
