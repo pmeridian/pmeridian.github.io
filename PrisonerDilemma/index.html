@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Iterated Prisoner&#39;s Dilemma by simzou</title>
+    <title>Iterated Prisoner&#39;s Dilemma</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -55,9 +55,7 @@
   <body>
     <section class="page-header">
       <h1 class="project-name">Iterated Prisoner&#39;s Dilemma Simulation</h1>
-      <h2 class="project-tagline">Final Project for UCLA Math 167 - Mathematical Game Theory (Spring 2015) <br />Simon Zou - Professor Marcy Robertson</h2>
-      <a href="https://github.com/simzou/iterated-prisoners-dilemma" class="btn">View on GitHub</a>
-      <a href="https://github.com/simzou/iterated-prisoners-dilemma/archive/gh-pages.zip" class="btn">Download .zip</a>
+      <a href="https://github.com/simzou/iterated-prisoners-dilemma" class="btn">Based on GitHub</a>
     </section>
     <section class="main-content">
       <h3 id="table-of-contents"><a name="user-content-table-of-contents" href="#table-of-contents" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Table of Contents</h3>
@@ -73,7 +71,7 @@
       <h3 id="introduction"><a name="user-content-introduction" href="#introduction" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Introduction</h3>
       <p>In the 1980s, University of Michigan professor of political science Robert Axelrod conducted one of the first experiments that combined computational modeling and evolutionary game theory. </p>
       <p>He solicited strategies (written as FORTRAN programs) from colleagues around the world for the iterated prisoner&rsquo;s dilemma and ran a round robin tournament, pitting the strategies against each other and determining a winner. His results that showed &ldquo;nice&rdquo; and &ldquo;forgiving&rdquo; strategies had greater success in the tournament. His experiments and collaboration with biologist W.D. Hamilton illustrated how cooperation could have evolved biologically. </p>
-      <p>For this project, we attempted to recreate Axelrod&rsquo;s tournament in JavaScript with different sets of strategies. However, we find that if the set of all strategies do not meet certain constraints, cooperation will not evolve as it did in Axelrod&rsquo;s tournament.</p>
+      <p>This project attempts to recreate Axelrod&rsquo;s tournament in JavaScript with different sets of strategies. However, if the set of all strategies do not meet certain constraints, cooperation will not evolve as it did in Axelrod&rsquo;s tournament.</p>
       <h3 id="background"><a name="user-content-background" href="#background" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Background</h3>
       <p>The <strong>Prisoner&rsquo;s Dilemma</strong> is a classic example in game theory that illustrates how individual self-interest can lead to a poor outcome for a group. </p>
       <p>The prisoner&rsquo;s dilemma has 2 players (the &ldquo;prisoners&rdquo;) who each have two options: cooperate or defect. These choices result in 4 possible outcomes with associated payoffs for each player. </p>
@@ -178,7 +176,7 @@
       <p>To test this explanation, we can run a simulation consisting mostly of strategies that do have memory, such as Tit-For-Tat and Pavlov. Here, we have a simulation of a tournament with 2 Tit-For-Tats, 4 Pavlov&rsquo;s, and a Defector:</p>
       <p><img alt="Chart 3" src="chart3.png" /></p>
       <p>Here we see the bots without memory, Defector and Random, do poorly compared to the the rest and Tit-For-Tat now does come out on top when the environment has more individuals capable of cooperation. Even upon adding more defectors, Tit-For-Tat is able to find enough other individuals (the clusters as needed by condition 4) to cooperate with to win the tournament.</p>
-      <p>You can run your own tournaments at <a href="http://simzou.github.io/iterated-prisoners-dilemma"><a href="http://simzou.github.io/iterated-prisoners-dilemma/simulation.html"><a href="http://simzou.github.io/iterated-prisoners-dilemma/simulation.html">http://simzou.github.io/iterated-prisoners-dilemma/simulation.html</a></a></a>.</p>
+      <p>You can run your own tournaments at <a href="http://pmeridian.github.io/PrisonerDilemma"><a href="http://pmeridian.github.io/PrisonerDilemma/simulation.html"><a href="http://pmeridian.github.io/PrisonerDilemma/simulation.html">http://pmeridian.github.io/PrisonerDilemma/simulation.html</a></a></a>.</p>
       <h3 id="conclusion"><a name="user-content-conclusion" href="#conclusion" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Conclusion</h3>
       <p>Axelrod&rsquo;s original tournaments demonstrated how cooperation could evolve be a successful strategy within a group despite self-interested individuals. However, the environment of strategies has to be such that individual strategies are all capable of utilizing their knowledge of history with each other. When we pit strategies against each other that act independent of memory, the strategies with features Axelrod defined as good (such as being nice and forgiving) no longer perform as well. Thus given different environments, cooperation may not be a successful strategy. In particular, if the environment consists of many players that do not use previous interactions to inform future decisions, defecting and acting in self interest can be most successful. </p>
       <h3 id="citations"><a name="user-content-citations" href="#citations" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Footnotes / Citations</h3>
