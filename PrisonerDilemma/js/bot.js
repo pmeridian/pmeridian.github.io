@@ -74,8 +74,8 @@ Bot.prototype.accumulate = function () {
 function DefectorBot() {
 	Bot.call(this);
 	this.strategy = function(opponent) { return 'D'; }
-	this.nameid = "DefectorBot" + " (id #" + id + ")";
-	this.name = "DefectorBot";
+	this.nameid = "DefectorAgent" + " (id #" + id + ")";
+	this.name = "DefectorAgent";
 };
 
 DefectorBot.prototype = Object.create(Bot.prototype);
@@ -85,8 +85,8 @@ DefectorBot.prototype.constructor = DefectorBot;
 function CooperatorBot() {
 	Bot.call(this);
 	this.strategy = function(opponent) { return 'C'; }
-	this.nameid = "CooperatorBot" + " (id #" + id + ")";
-	this.name = "CooperatorBot";
+	this.nameid = "CooperatorAgent" + " (id #" + id + ")";
+	this.name = "CooperatorAgent";
 };
 
 CooperatorBot.prototype = Object.create(Bot.prototype);
@@ -102,8 +102,8 @@ function TitForTatBot() {
 		else 
 			return opponent.history[moves-1];
 	}
-	this.nameid = "TitForTatBot" + " (id #" + id + ")";
-	this.name = "TitForTatBot";
+	this.nameid = "TitForTatAgent" + " (id #" + id + ")";
+	this.name = "TitForTatAgent";
 };
 
 TitForTatBot.prototype = Object.create(Bot.prototype);
@@ -122,16 +122,16 @@ function VariableBot(coop_percentage) {
 	if (coop_percentage < 0.5) {
 		this.nameid = "GreedyBot (" + coop_percentage + ")" + " (id #" + id + ")";
 		//this.name = "GreedyBot (" + coop_percentage + ")";
-		this.name = "GreedyBot";
+		this.name = "GreedyAgent";
 	}
 	else if (coop_percentage === 0.5) {
-		this.nameid = "RandomBot" + " (id #" + id + ")";
-		this.name = "RandomBot";
+		this.nameid = "RandomAgent" + " (id #" + id + ")";
+		this.name = "RandomAgent";
 	}
 	else {
 		this.nameid = "FriendlyBot(" + coop_percentage + ")" + " (id #" + id + ")";
 		//this.name = "FriendlyBot(" + coop_percentage + ")";
-		this.name = "FriendlyBot";
+		this.name = "FriendlyAgent";
 	}
 };
 
@@ -154,8 +154,8 @@ function VindictiveBot() {
 		else
 			return 'C';
 	}
-	this.nameid = "VindictiveBot" + " (id #" + id + ")";
-	this.name = "VindictiveBot";
+	this.nameid = "VindictiveAgent" + " (id #" + id + ")";
+	this.name = "VindictiveAgent";
 	this.reset = function () {
 		this.history = [];
 		this.scores = [];
@@ -183,8 +183,8 @@ function PavlovBot() {
 				return this.history[this.moves-1] === 'C' ? 'D' : 'C';
 		}
 	}
-	this.nameid = "PavlovBot" + " (id #" + id + ")";
-	this.name = "PavlovBot";
+	this.nameid = "PavlovAgent" + " (id #" + id + ")";
+	this.name = "PavlovAgent";
 };
 
 PavlovBot.prototype = Object.create(Bot.prototype);
