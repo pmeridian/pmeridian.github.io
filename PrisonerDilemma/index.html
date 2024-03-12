@@ -16,31 +16,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js"></script>
 
-    <script>
+    <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
-        config: ["MMLorHTML.js"],
-        extensions: ["tex2jax.js"],
-        jax: ["input/TeX"],
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-          processEscapes: false
-        },
-        TeX: {
-          extensions: ["AMSmath.js", "AMSsymbols.js"],
-          TagSide: "right",
-          TagIndent: ".8em",
-          MultLineWidth: "85%",
-          equationNumbers: {
-            autoNumber: "AMS",
-          },
-          unicode: {
-            fonts: "STIXGeneral,'Arial Unicode MS'"
-          }
-        },
-        showProcessingMessages: false
+	  extensions: ["tex2jax.js"],
+	  jax: ["input/TeX", "output/HTML-CSS"],
+	  tex2jax: {
+	      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+	      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+	      processEscapes: true
+	  },
+	  "HTML-CSS": { fonts: ["TeX"] }
       });
-      hljs.initHighlightingOnLoad();
     </script>
     <style>
         #myChart {
