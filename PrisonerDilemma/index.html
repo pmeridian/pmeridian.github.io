@@ -14,32 +14,13 @@
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js"></script>
 
-    <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({
-		extensions: ["tex2jax.js"],
-		jax: ["input/TeX", , "output/SVG"],
-		tex2jax: {
-		    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-		    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-		    processEscapes: false
-		},
-		TeX: {
-		    extensions: ["AMSmath.js", "AMSsymbols.js"],
-		    TagSide: "right",
-		    TagIndent: ".8em",
-		    MultLineWidth: "85%",
-		    equationNumbers: {
-			autoNumber: "AMS",
-		    },
-		    unicode: {
-			fonts: "STIXGeneral,'Arial Unicode MS'"
-		    }
-		},
-		showProcessingMessages: true
-	    });
+    <script>
+      MathJax = {
+	  tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]}
+      };
     </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
     <style>
         #myChart {
             width: 100%;
