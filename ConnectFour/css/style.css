@@ -9,6 +9,22 @@ a, a:visited{
     color: #551A8B;
 }
 
+#footer {
+    border-top: solid 1px #C0C0C0;
+    font-size: 9pt;
+    color: #808080;
+}
+
+#footer a {
+    color: #C0C0C0;
+    text-decoration: none;
+}
+
+#footer a:hover {
+    color: #FFFFFF;
+    text-decoration: underline;
+}
+
 h1 {
     line-height: 1;
     margin: 0;
