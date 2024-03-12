@@ -14,10 +14,7 @@
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-
-
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/2.7-latest/MathJax.js??config=TeX-AMS-MML_HTMLorMM"></script>
 
     <script>
       MathJax.Hub.Config({
@@ -79,9 +76,9 @@
       <p>We define the following payoff values:</p>
       <ul>
         <li>$R$: reward for mutual cooperation (3 points)</li>
-        <li>$T$: temptation to defect (5 points)</li>
-        <li>$S$: sucker&rsquo;s payoff (0 points)</li>
-        <li>$P$: punishment for mutual defection (1 point)</li>
+        <li>$T$: temptation to defect (4 points)</li>
+        <li>$S$: sucker&rsquo;s payoff (1 points)</li>
+        <li>$P$: punishment for mutual defection (2 point)</li>
       </ul>
       <p>If both players cooperate, they both receive $R$ points. If one player cooperates and the other defects, the cooperator gets $S$ while the defector gets $T$ points. If both defect, they both get $P$ points. </p>
       <p>These values are otherwise arbitrary values selected to follow this constraint: $T &gt; R &gt; P &gt; S$. Thus the temptation to defect is the highest score possible, the lowest score is the sucker&rsquo;s payoff, and the reward for mutual cooperation is higher than the punishment for mutual defection. The &ldquo;dilemma&rdquo; comes from the fact that mutual cooperation is preferable to mutual defection, but defection is the optimal strategy (i.e. mutual defection is a <strong>Nash equilibrium</strong>, a situation in which neither player can do better by changing his or her strategy). <a name="footnote1"></a><a href="#footnotes"><sup>1</sup></a>. The following table of payoffs are the values used in Axelrod&rsquo;s experiments and will be the same that are used for our simulations.</p>
