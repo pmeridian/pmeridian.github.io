@@ -27,7 +27,6 @@
                     <p class="header">Algorithm</p>
                     <p>
                         <select id="algorithm-select" autocomplete="off">
-                            <option value="minimax">Minimax</option>
                             <option value="alphabeta" selected>Alpha-Beta</option>
                         </select>
                     </p>
@@ -68,11 +67,5 @@
         <script src="js/jquery-ui.min.js"></script>
         <script src="js/board.js"></script>
         <script src="js/connect-four.js"></script>
-
-        <script>
-        $('#algorithm-select').change(function() {
-            window.location = '../' + $(this).val() + '/index.html';
-        });
-        </script>
     </body>
 </html>
