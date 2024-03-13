@@ -94,3 +94,19 @@ textarea {
 input[type='number'] {
     width: 60px;
 }
+
+#footer {
+    border-top: solid 1px #C0C0C0;
+    font-size: 9pt;
+    color: #808080;
+}
+
+#footer a {
+    color: #C0C0C0;
+    text-decoration: none;
+}
+
+#footer a:hover {
+    color: #303030;
+    text-decoration: underline;
+}
